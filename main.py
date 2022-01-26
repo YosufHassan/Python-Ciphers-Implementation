@@ -1,9 +1,13 @@
+from lib2to3.pgen2 import token
 import time
 import fractions
 import re
 import string
 import itertools
+import math
+from tokenize import Token
 
+key = "HACK"
 ALPHABET_SIZE = 26
 
 class Tokenizer():
@@ -30,6 +34,10 @@ class Tokenizer():
         for token in range(len(arr)-1):
             clean.append(Tokenizer.tokenSplitter(arr[token]))
         return clean
+    
+    def concatList(self,list):
+        reslist = " ".join(list)
+        return reslist
 
 class Affine():
 
@@ -169,3 +177,111 @@ class PlayFair():
                 plaintext += table[row2 * 5 + col1]
     
         return plaintext
+
+class ColumnTransposition():
+# Encryption
+    def encryptMessage(msg):
+        cipher = ""
+
+        # track key indices
+        k_indx = 0
+
+        msg_len = float(len(msg))
+        msg_lst = list(msg)
+        key_lst = sorted(list(key))
+
+        # calculate column of the matrix
+        col = len(key)
+        
+        # calculate maximum row of the matrix
+        row = int(math.ceil(msg_len / col))
+
+        # add the padding character '_' in empty
+        # the empty cell of the matix
+        fill_null = int((row * col) - msg_len)
+        msg_lst.extend('_' * fill_null)
+
+        # create Matrix and insert message and
+        # padding characters row-wise
+        matrix = [msg_lst[i: i + col]
+                for i in range(0, len(msg_lst), col)]
+
+        # read matrix column-wise using key
+        for _ in range(col):
+            curr_idx = key.index(key_lst[k_indx])
+            cipher += ''.join([row[curr_idx]
+                            for row in matrix])
+            k_indx += 1
+
+        return cipher
+
+    # Decryption
+    def decryptMessage(cipher):
+        msg = ""
+
+        # track key indices
+        k_indx = 0
+
+        # track msg indices
+        msg_indx = 0
+        msg_len = float(len(cipher))
+        msg_lst = list(cipher)
+
+        # calculate column of the matrix
+        col = len(key)
+        
+        # calculate maximum row of the matrix
+        row = int(math.ceil(msg_len / col))
+
+        # convert key into list and sort
+        # alphabetically so we can access
+        # each character by its alphabetical position.
+        key_lst = sorted(list(key))
+
+        # create an empty matrix to
+        # store deciphered message
+        dec_cipher = []
+        for _ in range(row):
+            dec_cipher += [[None] * col]
+
+        # Arrange the matrix column wise according
+        # to permutation order by adding into new matrix
+        for _ in range(col):
+            curr_idx = key.index(key_lst[k_indx])
+
+            for j in range(row):
+                dec_cipher[j][curr_idx] = msg_lst[msg_indx]
+                msg_indx += 1
+            k_indx += 1
+
+        # convert decrypted msg matrix into a string
+        try:
+            msg = ''.join(sum(dec_cipher, []))
+        except TypeError:
+            raise TypeError("This program cannot",
+                            "handle repeating words.")
+
+        null_count = msg.count('_')
+
+        if null_count > 0:
+            return msg[: -null_count]
+
+        return msg
+
+# Driver code for classical algorithms
+print('This is a benchmark to time classical algorithms\n')
+print('Input file: "plaintext.txt"\n')
+tokenizer = Tokenizer('plaintext.txt','cleantext.txt')
+print("Cleaning input file ...\n")
+tokenizer.cleaner()
+print("parsing cleaned input file ...\n\nThe message is as follows\n")
+tokens = tokenizer.readFile()
+print(tokenizer.concatList(tokens))
+print('\nPerforming the Affine encryption algorithm ...\n\nThe encrypted message is as follows\n')
+affineres = []
+affinestart = time.time()
+for i in range(len(tokens)-1):
+    affineres.append(Affine().encrypt(17,25,tokens[i],ALPHABET_SIZE))
+affineend = time.time()
+print(tokenizer.concatList(affineres))
+print(f"\nTime taken to encrypt the file is {affineend-affinestart} seconds\n\n")
