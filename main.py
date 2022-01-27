@@ -79,7 +79,7 @@ def add_round_key(s, k):
     for i in range(4):
         for j in range(4):
             s[i][j] ^= k[i][j]
-
+    print(f'\nadd round key for current block\n{s}\n')
 
 
 xtime = lambda a: (((a << 1) ^ 0x1B) & 0xFF) if (a & 0x80) else (a << 1)
@@ -99,6 +99,7 @@ def mix_columns(s):
     for i in range(4):
         mix_single_column(s[i])
 
+    print(f'\nMix Columns for current block\n{s}\n')
 
 def inv_mix_columns(s):
 
@@ -586,5 +587,5 @@ key = os.urandom(16)
 iv = os.urandom(16)
 print("\nPerforming the AES with CBC encryption algorithm ...\n")
 encrypted = AES(key).encrypt_cbc(bytes(tokensstring,'utf-8'), iv)
-print(encrypted)
+print(f"\n{encrypted}")
 print('\n')
