@@ -68,7 +68,7 @@ def shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[1][1], s[2][1], s[3][1], s[0][1]
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
     s[0][3], s[1][3], s[2][3], s[3][3] = s[3][3], s[0][3], s[1][3], s[2][3]
-    print(f"\nShift rows for current Block\n\n{s}")
+    print(f"\nShift rows for current Block\n\n{s}\n")
     
 def inv_shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[3][1], s[0][1], s[1][1], s[2][1]
@@ -79,7 +79,7 @@ def add_round_key(s, k):
     for i in range(4):
         for j in range(4):
             s[i][j] ^= k[i][j]
-    print(f'\nadd round key for current block\n{s}\n')
+    print(f'\nadd round key for current block\n\n{s}\n')
 
 
 xtime = lambda a: (((a << 1) ^ 0x1B) & 0xFF) if (a & 0x80) else (a << 1)
@@ -99,7 +99,7 @@ def mix_columns(s):
     for i in range(4):
         mix_single_column(s[i])
 
-    print(f'\nMix Columns for current block\n{s}\n')
+    print(f'\nMix Columns for current block\n\n{s}\n')
 
 def inv_mix_columns(s):
 
@@ -552,7 +552,7 @@ class AES():
         return unpad(b''.join(blocks))
 
 
-# Driver code for classical algorithms
+# Driver code for benchmarking algorithms
 print('This is a benchmark to time classical and modern cipher algorithms\n')
 print('Input file: "plaintext.txt"\n')
 tokenizer = Tokenizer('plaintext.txt','cleantext.txt')
@@ -570,22 +570,31 @@ for i in range(len(tokens)-1):
     affineres.append(Affine().encrypt(17,25,tokens[i],ALPHABET_SIZE))
 affineend = time.time()
 print(tokenizer.concatList(affineres))
+print(f'\nTime taken to perform the affine encryption algrithm is {affineend-affinestart} seconds')
 
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
+playfairstart = time.time()
 for i in range(len(tokens)-1):
     playfairres.append(PlayFair().encode(tokens[i],'playfair'))
+playfairend = time.time()
 print(tokenizer.concatList(playfairres))
+print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
 
 print("\nPerforming the Column Transposition encryption algorithm ...\n")
 columnres = []
+columnstart = time.time()
 for i in range(len(tokens)-1):
     columnres.append(ColumnTransposition().encryptMessage(tokens[i]))
+columnend = time.time()
 print(tokenizer.concatList(columnres)+"\n")
-
-key = os.urandom(16)
+print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} seconds')
+keyAes = os.urandom(16)
 iv = os.urandom(16)
 print("\nPerforming the AES with CBC encryption algorithm ...\n")
-encrypted = AES(key).encrypt_cbc(bytes(tokensstring,'utf-8'), iv)
+aesstart = time.time()
+encrypted = AES(keyAes).encrypt_cbc(bytes(tokensstring,'utf-8'), iv)
+aesend = time.time()
 print(f"\n{encrypted}")
+print(f'\nTime taken to perform the Column Transposition encryption algrithm is {aesend-aesstart} seconds')
 print('\n')
