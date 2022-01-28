@@ -1,2 +1,1 @@
-this file is created to test the tokenizer class
-the output is as follows  
+this file is created to test the

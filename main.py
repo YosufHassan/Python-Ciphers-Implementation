@@ -223,9 +223,15 @@ class Affine():
         a_inv = self.inverse(a, m)
         return (a_inv * (y-b))%m
 
-    def inverse(x, m):
+    def gcd(self,a, b):
+    
+        while b:
+            a, b = b, a%b
+        return a
+
+    def inverse(self,x, m):
         possible_a_inv = [a for a in range(0,ALPHABET_SIZE) 
-                            if fractions.gcd(a, ALPHABET_SIZE) == 1]
+                            if self.gcd(a, ALPHABET_SIZE) == 1]
         for i in possible_a_inv:
             if (x*i)%m == 1:
                 return i
@@ -240,7 +246,7 @@ class Affine():
     def decrypt(self,a, b, y, m):
         x = []
         for i in y:
-            x.append(self.mapDigitToAlpha(self,self.decrypt_char(a, b, m, self.mapAlphaToDigit(i))))
+            x.append(self.mapDigitToAlpha(self.decrypt_char(a, b, m, self.mapAlphaToDigit(i))))
 
         return ''.join(x)
 
@@ -517,10 +523,7 @@ class AES():
         return matrix2bytes(cipher_state)
 
     def encrypt_cbc(self, plaintext, iv):
-        """
-        Encrypts `plaintext` using CBC mode and PKCS#7 padding, with the given
-        initialization vector (iv).
-        """
+
         assert len(iv) == 16 # Assertion to ensure that the initial vector is 16
 
         plaintext = pad(plaintext) # pad the given plaintext PKCS#7
@@ -536,10 +539,7 @@ class AES():
         return b''.join(blocks)
 
     def decrypt_cbc(self, ciphertext, iv):
-        """
-        Decrypts `ciphertext` using CBC mode and PKCS#7 padding, with the given
-        initialization vector (iv).
-        """
+
         assert len(iv) == 16
 
         blocks = []
@@ -567,7 +567,7 @@ print('\nPerforming the Affine encryption algorithm ...\n')
 affineres = []
 affinestart = time.time()
 for i in range(len(tokens)-1):
-    affineres.append(Affine().encrypt(17,25,tokens[i],ALPHABET_SIZE))
+    affineres.append(Affine().encrypt(5,8,tokens[i],ALPHABET_SIZE))
 affineend = time.time()
 print(tokenizer.concatList(affineres))
 print(f'\nTime taken to perform the affine encryption algrithm is {affineend-affinestart} seconds')
@@ -596,5 +596,5 @@ aesstart = time.time()
 encrypted = AES(keyAes).encrypt_cbc(bytes(tokensstring,'utf-8'), iv)
 aesend = time.time()
 print(f"\n{encrypted}")
-print(f'\nTime taken to perform the Column Transposition encryption algrithm is {aesend-aesstart} seconds')
+print(f'\nTime taken to perform the AES encryption algrithm is {aesend-aesstart} seconds')
 print('\n')
