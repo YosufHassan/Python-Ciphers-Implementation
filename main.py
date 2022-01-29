@@ -251,7 +251,7 @@ class Affine():
             return chr(x+22)
 
 class PlayFair():
-    def chunker(self,seq, size):
+    def chunker(self,seq, size): # Split the plaintext into pairs and return the result as list of pairs
         it = iter(seq)
         while True:
             chunk = tuple(itertools.islice(it, size))
@@ -262,7 +262,7 @@ class PlayFair():
     
     def prepare_input(self,dirty):
 
-    
+        # Capitalize plaintext and include all the letters and remove anything that is not in the ascii table
         dirty = "".join([c.upper() for c in dirty if c in string.ascii_letters])
         clean = ""
     
@@ -303,17 +303,18 @@ class PlayFair():
     
     def encode(self,plaintext, key):
         table = self.generate_table(key)
+        print(f'\nThe Key Matrix\n{table}')
         plaintext = self.prepare_input(plaintext)
         ciphertext = ""
 
-        for char1, char2 in self.chunker(plaintext, 2):
+        for char1, char2 in self.chunker(plaintext, 2): # Each pair identify which row and column the pair exists (identify pair position)
             row1, col1 = divmod(table.index(char1), 5)
             row2, col2 = divmod(table.index(char2), 5)
-    
+            # if pair are in the same row take the letter to the right of each letter to construct cipher
             if row1 == row2:
-                ciphertext += table[row1 * 5 + (col1 + 1) % 5]
+                ciphertext += table[row1 * 5 + (col1 + 1) % 5] 
                 ciphertext += table[row2 * 5 + (col2 + 1) % 5]
-            elif col1 == col2:
+            elif col1 == col2:  # if pair are in the same column take the letter below of each letter to construct cipher
                 ciphertext += table[((row1 + 1) % 5) * 5 + col1]
                 ciphertext += table[((row2 + 1) % 5) * 5 + col2]
             else: 
@@ -325,16 +326,17 @@ class PlayFair():
     
     def decode(self,ciphertext, key):
         table = self.generate_table(key)
+        print(f'\nThe Key Matrix\n{table}')
         plaintext = ""
     
-        for char1, char2 in self.chunker(ciphertext, 2):
+        for char1, char2 in self.chunker(ciphertext, 2):    # Each pair identify which row and column the pair exists (identify pair position)
             row1, col1 = divmod(table.index(char1), 5)
             row2, col2 = divmod(table.index(char2), 5)
-    
+            # if pair are in the same row take the letter to the left of each letter to construct cipher
             if row1 == row2:
                 plaintext += table[row1 * 5 + (col1 - 1) % 5]
                 plaintext += table[row2 * 5 + (col2 - 1) % 5]
-            elif col1 == col2:
+            elif col1 == col2:  # if pair are in the same column take the letter above of each letter to construct cipher
                 plaintext += table[((row1 - 1) % 5) * 5 + col1]
                 plaintext += table[((row2 - 1) % 5) * 5 + col2]
             else:
@@ -424,7 +426,7 @@ class ColumnTransposition():
             msg = ''.join(sum(dec_cipher, []))
         except TypeError:
             raise TypeError("This program cannot",
-                            "handle repeating words.")
+                            "decrypt repeating words.")
 
         null_count = msg.count('_')
 
@@ -586,20 +588,29 @@ print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
 playfairstart = time.time()
-for i in range(len(tokens)-1):
-    playfairres.append(PlayFair().encode(tokens[i],'playfair'))
+
+playfairres=PlayFair().encode(tokensstring,key)
 playfairend = time.time()
-print(tokenizer.concatList(playfairres))
+print(playfairres)
 print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
+
+print("\nPerforming the PlayFair decryption algorithm ...\n")
+playdecfairres = []
+playfairstart = time.time()
+
+playdecfairres=PlayFair().decode(playfairres,key)
+playfairend = time.time()
+print(playdecfairres)
+print(f'\nTime taken to perform the playfair decryption algrithm is {playfairend-playfairstart} seconds')
 
 print("\nPerforming the Column Transposition encryption algorithm ...\n")
 columnres = []
 columnstart = time.time()
-for i in range(len(tokens)-1):
-    columnres.append(ColumnTransposition().encryptMessage(tokens[i]))
+columnres = ColumnTransposition().encryptMessage(tokensstring)
 columnend = time.time()
-print(tokenizer.concatList(columnres)+"\n")
+print(columnres+"\n")
 print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} seconds')
+
 '''
 keyAes = os.urandom(16)
 iv = os.urandom(16)
