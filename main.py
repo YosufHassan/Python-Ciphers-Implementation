@@ -303,7 +303,7 @@ class PlayFair():
     
     def encode(self,plaintext, key):
         table = self.generate_table(key)
-        print(f'\nThe Key Matrix\n{table}')
+        print(f'The Key Matrix\n{table}')
         plaintext = self.prepare_input(plaintext)
         ciphertext = ""
 
@@ -326,7 +326,7 @@ class PlayFair():
     
     def decode(self,ciphertext, key):
         table = self.generate_table(key)
-        print(f'\nThe Key Matrix\n{table}')
+        print(f'The Key Matrix\n{table}')
         plaintext = ""
     
         for char1, char2 in self.chunker(ciphertext, 2):    # Each pair identify which row and column the pair exists (identify pair position)
@@ -553,7 +553,7 @@ class AES():
 
         return unpad(b''.join(blocks))
 
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Driver code for benchmarking algorithms
 print('This is a benchmark to time classical and modern cipher algorithms\n')
 print('Input file: "plaintext.txt"\n')
@@ -564,7 +564,7 @@ print("parsing cleaned input file ...\n\nThe message is\n")
 tokens = tokenizer.readFile()
 print(tokenizer.concatList(tokens))
 tokensstring = tokenizer.concatList(tokens)
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print('\nPerforming the Affine encryption algorithm ...\n')
 affineres = []
 affinestart = time.time()
@@ -573,9 +573,7 @@ for token in range(len(tokens)):
 print(tokenizer.concatList(affineres))
 affineend = time.time()
 print(f'\nTime taken to perform the affine encryption algrithm is {affineend-affinestart} seconds')
-
-
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print('\nPerforming the Affine decryption algorithm ...\n')
 affinedecres = []
 affinedecstart = time.time()
@@ -584,33 +582,39 @@ for token in range(len(affineres)):
 print(tokenizer.concatList(affinedecres))
 affinedecend = time.time()
 print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-affinedecstart} seconds')
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
 playfairstart = time.time()
-
 playfairres=PlayFair().encode(tokensstring,key)
 playfairend = time.time()
 print(playfairres)
 print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the PlayFair decryption algorithm ...\n")
 playdecfairres = []
-playfairstart = time.time()
-
-playdecfairres=PlayFair().decode(playfairres,key)
-playfairend = time.time()
-print(playdecfairres)
-print(f'\nTime taken to perform the playfair decryption algrithm is {playfairend-playfairstart} seconds')
-
+playfairdecstart = time.time()
+playdecfairres=PlayFair().decode(playfairres,key).lower()
+playfairdecend = time.time()
+print(playdecfairres+"\n")
+print(f'\nTime taken to perform the playfair decryption algrithm is {playfairdecend-playfairdecstart} seconds')
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the Column Transposition encryption algorithm ...\n")
 columnres = []
 columnstart = time.time()
 columnres = ColumnTransposition().encryptMessage(tokensstring)
 columnend = time.time()
-print(columnres+"\n")
-print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} seconds')
-
+print(columnres)
+print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} \n')
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+print("\nPerforming the Column Transposition decryption algorithm ...\n")
+columnres = []
+columndecstart = time.time()
+columndecres = ColumnTransposition().decryptMessage(columnres)
+columndecend = time.time()
+print(columndecres)
+print(f'\nTime taken to perform the Column Transposition decryption algrithm is {columndecend-columndecstart} \n')
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 '''
 keyAes = os.urandom(16)
 iv = os.urandom(16)
