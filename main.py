@@ -6,7 +6,7 @@ import string
 import itertools
 import math
 
-key = "\\//#algorithmkeystring*//\\"
+key = "multimedia"
 ALPHABET_SIZE = 26
 
 # Global Variables and functions
@@ -179,7 +179,7 @@ class Tokenizer():
     def cleaner(self):
         uncleanText = open(self.plaintext).read()
         cleanText = re.sub('[^A-Za-z0-9\s\n]+', '', uncleanText)
-        open(self.cleantext, 'w').write(cleanText)
+        open(self.cleantext, 'w').write(cleanText.lower())
 
     def readFile(self):
         fileObj = open(self.cleantext, "r")
@@ -202,20 +202,6 @@ class Tokenizer():
 
 class Affine():
 
-    def mapAlphaToDigit(self,x):
-        if str.isdigit(x):
-            i = ord(x)
-            if 47 < i and i < 58:
-                return ord(x)-22
-        elif str.isalpha(x):
-            return ord(x)-97
-
-    def mapDigitToAlpha(self,x):
-        if 0 <= x and x < 26:
-            return chr(x+97)
-        elif 26 <= x and x < ALPHABET_SIZE:
-            return chr(x+22)
-
     def encrypt_char(self,a, b, m, x):
         return (a*x+b)%m
 
@@ -224,7 +210,7 @@ class Affine():
         return (a_inv * (y-b))%m
 
     def gcd(self,a, b):
-    
+
         while b:
             a, b = b, a%b
         return a
@@ -250,6 +236,20 @@ class Affine():
 
         return ''.join(x)
 
+    def mapAlphaToDigit(self,x):
+        if str.isdigit(x):
+            i = ord(x)
+            if 47 < i and i < 58:
+                return ord(x)-22
+        elif str.isalpha(x):
+            return ord(x)-97
+
+    def mapDigitToAlpha(self,x):
+        if 0 <= x and x < 26:
+            return chr(x+97)
+        elif 26 <= x and x < ALPHABET_SIZE:
+            return chr(x+22)
+
 class PlayFair():
     def chunker(self,seq, size):
         it = iter(seq)
@@ -269,34 +269,34 @@ class PlayFair():
         if len(dirty) < 2:
             return dirty
     
-        for i in range(len(dirty) - 1):
+        for i in range(len(dirty) - 1): # Add the junk letter X if the pair has the same letter
             clean += dirty[i]
     
             if dirty[i] == dirty[i + 1]:
                 clean += "X"
     
-        clean += dirty[-1]
+        clean += dirty[-1]            
     
         if len(clean) & 1:
-            clean += "X"
+            clean += "X"            # Add the junk letter X if the number of letters is not even
     
         return clean
     
     
     def generate_table(self,key):
 
-        alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+        alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ" # Define List of alphabets
 
-        table = []
+        table = [] # Define key matrix
 
         for char in key.upper():
-            if char not in table and char in alphabet:
-                table.append(char)
+            if char not in table and char in alphabet:  # check if the letters in the encryption key are in the table or not
+                table.append(char)                      # if some of the letters are not in the key matrix they are appended
     
 
-        for char in alphabet:
+        for char in alphabet:                           # check if the letters in the alphabets are in the table or not
             if char not in table:
-                table.append(char)
+                table.append(char)                      # if some of the letters are not in the key matrix they are appended
     
         return table
     
@@ -558,7 +558,7 @@ print('Input file: "plaintext.txt"\n')
 tokenizer = Tokenizer('plaintext.txt','cleantext.txt')
 print("Cleaning input file ...\n")
 tokenizer.cleaner()
-print("parsing cleaned input file ...\n\nThe message is as follows\n")
+print("parsing cleaned input file ...\n\nThe message is\n")
 tokens = tokenizer.readFile()
 print(tokenizer.concatList(tokens))
 tokensstring = tokenizer.concatList(tokens)
@@ -566,11 +566,22 @@ tokensstring = tokenizer.concatList(tokens)
 print('\nPerforming the Affine encryption algorithm ...\n')
 affineres = []
 affinestart = time.time()
-for i in range(len(tokens)-1):
-    affineres.append(Affine().encrypt(5,8,tokens[i],ALPHABET_SIZE))
-affineend = time.time()
+for token in range(len(tokens)):
+    affineres.append(Affine().encrypt(5,8,tokens[token],ALPHABET_SIZE))
 print(tokenizer.concatList(affineres))
+affineend = time.time()
 print(f'\nTime taken to perform the affine encryption algrithm is {affineend-affinestart} seconds')
+
+
+
+print('\nPerforming the Affine decryption algorithm ...\n')
+affinedecres = []
+affinedecstart = time.time()
+for token in range(len(affineres)):
+    affinedecres.append(Affine().decrypt(5,8,affineres[token],ALPHABET_SIZE))
+print(tokenizer.concatList(affinedecres))
+affinedecend = time.time()
+print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-affinedecstart} seconds')
 
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
@@ -589,6 +600,7 @@ for i in range(len(tokens)-1):
 columnend = time.time()
 print(tokenizer.concatList(columnres)+"\n")
 print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} seconds')
+'''
 keyAes = os.urandom(16)
 iv = os.urandom(16)
 print("\nPerforming the AES with CBC encryption algorithm ...\n")
@@ -598,3 +610,4 @@ aesend = time.time()
 print(f"\n{encrypted}")
 print(f'\nTime taken to perform the AES encryption algrithm is {aesend-aesstart} seconds')
 print('\n')
+'''
