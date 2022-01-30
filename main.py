@@ -1,15 +1,13 @@
-import os
 import time
-import fractions
 import re
 import string
 import itertools
 import math
 
-key = "qvgcwxiybjspzfadtelnkuorhm"
+key = "qvgcwxiybjspzfadtelnkuorhm"  # Key used for column transposition and playfair algorithm
 ALPHABET_SIZE = 26
 
-# Global Variables and functions
+# Global Variables and helper functions for AES
 
 # The SBox given in the design
 s_box = (
@@ -51,7 +49,7 @@ inv_s_box = (
     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D,
 )
 
-
+# Function that performs the subsitution of the bytes for the AES algorithm
 def sub_bytes(s):
     for i in range(4):
         for j in range(4):
@@ -63,7 +61,7 @@ def inv_sub_bytes(s):
         for j in range(4):
             s[i][j] = inv_s_box[s[i][j]]
 
-
+# Function that is responsible to shift the rows for the AES algorithm encryption
 def shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[1][1], s[2][1], s[3][1], s[0][1]
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
@@ -75,6 +73,7 @@ def inv_shift_rows(s):
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
     s[0][3], s[1][3], s[2][3], s[3][3] = s[1][3], s[2][3], s[3][3], s[0][3]
 
+# Function that is responsible to reverse the shifting of the rows for the AES algorithm decryption
 def add_round_key(s, k):
     for i in range(4):
         for j in range(4):
@@ -170,7 +169,7 @@ def split_blocks(message, block_size=16, require_padding=True):
         assert len(message) % block_size == 0 or not require_padding
         return [message[i:i+16] for i in range(0, len(message), block_size)]
 
-
+# Class responsible for reading and parsing the input file in addition the class provides useful operations to manipulate the file contents and format user output
 class Tokenizer():
 
     def __init__(self, plaintext, cleantext):
