@@ -115,3 +115,4 @@ dmypy.json
 
 # Maintainer specified files
 output.txt
+log.txt
