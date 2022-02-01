@@ -55,7 +55,7 @@ def sub_bytes(s):
     for i in range(4):
         for j in range(4):
             s[i][j] = s_box[s[i][j]]
-    print(f"\nSubBytes for current Block\n\n{s}")
+    print(f"\nSubBytes for current Round\n\n{s}")
 
 def inv_sub_bytes(s):
     for i in range(4):
@@ -79,7 +79,7 @@ def add_round_key(s, k):
     for i in range(4):
         for j in range(4):
             s[i][j] ^= k[i][j]
-    print(f'\nadd round key for current block\n\n{s}\n')
+    print(f'\nadd round key for current Round\n\n{s}\n')
 
 
 xtime = lambda a: (((a << 1) ^ 0x1B) & 0xFF) if (a & 0x80) else (a << 1)
@@ -99,7 +99,7 @@ def mix_columns(s):
     for i in range(4):
         mix_single_column(s[i])
 
-    print(f'\nMix Columns for current block\n\n{s}\n')
+    print(f'\nMix Columns for current Round\n\n{s}\n')
 
 def inv_mix_columns(s):
 
