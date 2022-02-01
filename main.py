@@ -3,6 +3,7 @@ import re
 import string
 import itertools
 import math
+import os
 
 key = "qvgcwxiybjspzfadtelnkuorhm"  # Key used for column transposition and playfair algorithm
 ALPHABET_SIZE = 26
@@ -554,6 +555,9 @@ class AES():
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Driver code for benchmarking algorithms
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Parsing and preparing input text file
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print('This is a benchmark to time classical and modern cipher algorithms\n')
 print('Input file: "plaintext.txt"\n')
 tokenizer = Tokenizer('plaintext.txt','cleantext.txt')
@@ -585,7 +589,7 @@ print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
 playfairstart = time.time()
-playfairres=PlayFair().encode(tokensstring,'wonderful')
+playfairres=PlayFair().encode(tokensstring,key)
 playfairend = time.time()
 print(playfairres)
 print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
@@ -593,7 +597,7 @@ print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend
 print("\nPerforming the PlayFair decryption algorithm ...\n")
 playdecfairres = []
 playfairdecstart = time.time()
-playdecfairres=PlayFair().decode(playfairres,key).lower()
+playdecfairres=PlayFair().decode(playfairres,key)
 playfairdecend = time.time()
 print(playdecfairres+"\n")
 print(f'\nTime taken to perform the playfair decryption algrithm is {playfairdecend-playfairdecstart} seconds')
@@ -613,7 +617,6 @@ columndecend = time.time()
 print(columndecres)
 print(f'\nTime taken to perform the Column Transposition decryption algrithm is {columndecend-columndecstart} \n')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-'''
 keyAes = os.urandom(16)
 iv = os.urandom(16)
 print("\nPerforming the AES with CBC encryption algorithm ...\n")
@@ -623,4 +626,12 @@ aesend = time.time()
 print(f"\n{encrypted}")
 print(f'\nTime taken to perform the AES encryption algrithm is {aesend-aesstart} seconds')
 print('\n')
-'''
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+print("\nPerforming the AES with CBC decryption algorithm ...\n")
+aesdecst = time.time()
+decrypted = AES(keyAes).decrypt_cbc(encrypted,iv)
+aesdecend = time.time()
+print(f"\n{decrypted}")
+print(f'\nTime taken to perform the AES decryption algrithm is {aesdecend-aesdecst} seconds')
+print('\n')
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
