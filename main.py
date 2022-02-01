@@ -6,7 +6,7 @@ import math
 import os
 import sys
 
-# Print program output to text file named 'log.txt'
+# save algorithm stages result and time taken to execute the encryption and decryption to a text file named 'log.txt'
 stdoutOrigin=sys.stdout 
 sys.stdout = open("log.txt", "w")
 
