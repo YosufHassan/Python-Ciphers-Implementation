@@ -575,7 +575,7 @@ for token in range(len(tokens)):
     affineres.append(Affine().encrypt(5,8,tokens[token],ALPHABET_SIZE))
 print(tokenizer.concatList(affineres))
 affineend = time.time()
-print(f'\nTime taken to perform the affine encryption algrithm is {affineend-affinestart} seconds')
+print(f'\nTime taken to perform the affine encryption algrithm is {(affineend-affinestart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print('\nPerforming the Affine decryption algorithm ...\n')
 affinedecres = []
@@ -584,7 +584,7 @@ for token in range(len(affineres)):
     affinedecres.append(Affine().decrypt(5,8,affineres[token],ALPHABET_SIZE))
 print(tokenizer.concatList(affinedecres))
 affinedecend = time.time()
-print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-affinedecstart} seconds')
+print(f'\nTime taken to perform the affine decryption algrithm is {(affinedecend-affinedecstart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
@@ -592,7 +592,7 @@ playfairstart = time.time()
 playfairres=PlayFair().encode(tokensstring,key)
 playfairend = time.time()
 print(playfairres)
-print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
+print(f'\nTime taken to perform the playfair encryption algrithm is {(playfairend-playfairstart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the PlayFair decryption algorithm ...\n")
 playdecfairres = []
@@ -600,7 +600,7 @@ playfairdecstart = time.time()
 playdecfairres=PlayFair().decode(playfairres,key)
 playfairdecend = time.time()
 print(playdecfairres+"\n")
-print(f'\nTime taken to perform the playfair decryption algrithm is {playfairdecend-playfairdecstart} seconds')
+print(f'\nTime taken to perform the playfair decryption algrithm is {(playfairdecend-playfairdecstart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the Column Transposition encryption algorithm ...\n")
 columnres = []
@@ -608,14 +608,14 @@ columnstart = time.time()
 columnres = ColumnTransposition().encryptMessage(tokensstring)
 columnend = time.time()
 print(columnres)
-print(f'\nTime taken to perform the Column Transposition encryption algrithm is {columnend-columnstart} \n')
+print(f'\nTime taken to perform the Column Transposition encryption algrithm is {(columnend-columnstart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the Column Transposition decryption algorithm ...\n")
 columndecstart = time.time()
 columndecres = ColumnTransposition().decryptMessage(columnres)
 columndecend = time.time()
 print(columndecres)
-print(f'\nTime taken to perform the Column Transposition decryption algrithm is {columndecend-columndecstart} \n')
+print(f'\nTime taken to perform the Column Transposition decryption algrithm is {(columndecend-columndecstart)*1000} milliseconds')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 keyAes = os.urandom(16)
 iv = os.urandom(16)
@@ -624,7 +624,7 @@ aesstart = time.time()
 encrypted = AES(keyAes).encrypt_cbc(bytes(tokensstring,'utf-8'), iv)
 aesend = time.time()
 print(f"\n{encrypted}")
-print(f'\nTime taken to perform the AES encryption algrithm is {aesend-aesstart} seconds')
+print(f'\nTime taken to perform the AES encryption algrithm is {(aesend-aesstart)*1000} milliseconds')
 print('\n')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 print("\nPerforming the AES with CBC decryption algorithm ...\n")
@@ -632,6 +632,6 @@ aesdecst = time.time()
 decrypted = AES(keyAes).decrypt_cbc(encrypted,iv)
 aesdecend = time.time()
 print(f"\n{decrypted}")
-print(f'\nTime taken to perform the AES decryption algrithm is {aesdecend-aesdecst} seconds')
+print(f'\nTime taken to perform the AES decryption algrithm is {(aesdecend-aesdecst)*1000} milliseconds')
 print('\n')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
