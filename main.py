@@ -585,7 +585,7 @@ print(f'\nTime taken to perform the affine decryption algrithm is {affinedecend-
 print("\nPerforming the PlayFair encryption algorithm ...\n")
 playfairres = []
 playfairstart = time.time()
-playfairres=PlayFair().encode(tokensstring,key)
+playfairres=PlayFair().encode(tokensstring,'wonderful')
 playfairend = time.time()
 print(playfairres)
 print(f'\nTime taken to perform the playfair encryption algrithm is {playfairend-playfairstart} seconds')
