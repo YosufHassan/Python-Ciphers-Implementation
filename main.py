@@ -78,6 +78,7 @@ def inv_shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[3][1], s[0][1], s[1][1], s[2][1]
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
     s[0][3], s[1][3], s[2][3], s[3][3] = s[1][3], s[2][3], s[3][3], s[0][3]
+    print(f"\nShift rows for current Block\n\n{s}\n")
 
 # Function that is responsible to reverse the shifting of the rows for the AES algorithm decryption
 def add_round_key(s, k):
@@ -198,7 +199,7 @@ class Tokenizer():
     def tokenArrSplitter(self, arr):
         clean = []
         for token in range(len(arr)-1):
-            clean.append(Tokenizer.tokenSplitter(arr[token]))
+            clean.append(self.tokenSplitter(arr[token]))
         return clean
     
     def concatList(self,list):
