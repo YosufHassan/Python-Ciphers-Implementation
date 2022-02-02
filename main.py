@@ -5,6 +5,7 @@ import itertools
 import math
 import os
 import sys
+import matplotlib.pyplot as plt
 
 # save algorithm stages result and time taken to execute the encryption and decryption to a text file named 'log.txt'
 stdoutOrigin=sys.stdout 
@@ -646,22 +647,18 @@ sys.stdout.close()
 sys.stdout=stdoutOrigin
 print("Program executed successfully\n")
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Report on encryption and decryprtion time for all the algorithms
+# Report on encryption and decryption time for all the algorithms
 print(f"Input plaintext file ...\n\n{tokensstring}\n")
 print(f'\nTime taken to perform the affine encryption algrithm is {(affineend-affinestart)*1000} milliseconds')
 print(f'\nTime taken to perform the affine decryption algrithm is {(affinedecend-affinedecstart)*1000} milliseconds')
-print('\n')
 
 print(f'\nTime taken to perform the playfair encryption algrithm is {(playfairend-playfairstart)*1000} milliseconds')
 print(f'\nTime taken to perform the playfair decryption algrithm is {(playfairdecend-playfairdecstart)*1000} milliseconds')
-print('\n')
 
 print(f'\nTime taken to perform the Column Transposition encryption algrithm is {(columnend-columnstart)*1000} milliseconds')
 print(f'\nTime taken to perform the Column Transposition decryption algrithm is {(columndecend-columndecstart)*1000} milliseconds')
-print('\n')
 
 print(f'\nTime taken to perform the AES encryption algrithm is {(aesend-aesstart)*1000} milliseconds')
 print(f'\nTime taken to perform the AES decryption algrithm is {(aesdecend-aesdecst)*1000} milliseconds')
 print('\n')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
