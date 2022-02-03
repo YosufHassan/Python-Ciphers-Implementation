@@ -5,7 +5,6 @@ import itertools
 import math
 import os
 import sys
-import matplotlib.pyplot as plt
 
 # save algorithm stages result and time taken to execute the encryption and decryption to a text file named 'log.txt'
 stdoutOrigin=sys.stdout 
@@ -73,13 +72,13 @@ def shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[1][1], s[2][1], s[3][1], s[0][1]
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
     s[0][3], s[1][3], s[2][3], s[3][3] = s[3][3], s[0][3], s[1][3], s[2][3]
-    print(f"\nShift rows for current Block\n\n{s}\n")
+    print(f"\nShift rows for current Round\n\n{s}\n")
     
 def inv_shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[3][1], s[0][1], s[1][1], s[2][1]
     s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
     s[0][3], s[1][3], s[2][3], s[3][3] = s[1][3], s[2][3], s[3][3], s[0][3]
-    print(f"\nShift rows for current Block\n\n{s}\n")
+    print(f"\nShift rows for current Round\n\n{s}\n")
 
 # Function that is responsible to reverse the shifting of the rows for the AES algorithm decryption
 def add_round_key(s, k):
@@ -210,13 +209,13 @@ class Tokenizer():
 class Affine():
 
     def encrypt_char(self,a, b, m, x):
-        return (a*x+b)%m
+        return (a*x+b)%m    # encrypt a single char using the encryption formula
 
     def decrypt_char(self,a, b, m, y):
-        a_inv = self.inverse(a, m)
-        return (a_inv * (y-b))%m
+        a_inv = self.inverse(a, m)  # Calculate the multiplilcative inverse
+        return (a_inv * (y-b))%m    # decrypt the char using the decryption formula
 
-    def gcd(self,a, b):
+    def gcd(self,a, b): # Function to calculate the greatest common divisor
 
         while b:
             a, b = b, a%b
@@ -364,14 +363,13 @@ class ColumnTransposition():
         msg_lst = list(msg)
         key_lst = sorted(list(key))
     
-        # calculate column of the matrix
+        # calculate the number of columns for the grid
         col = len(key)
         
-        # calculate maximum row of the matrix
+        # calculate the number of rows for the grid
         row = int(math.ceil(msg_len / col))
     
-        # add the padding character '_' in empty
-        # the empty cell of the matix 
+        # add underscore for the empty grid cells 
         fill_null = int((row * col) - msg_len)
         msg_lst.extend('_' * fill_null)
     
@@ -380,7 +378,7 @@ class ColumnTransposition():
         matrix = [msg_lst[i: i + col] 
                 for i in range(0, len(msg_lst), col)]
     
-        # read matrix column-wise using key
+        # Read the matrix column by column to print the ciphertext
         for _ in range(col):
             curr_idx = key.index(key_lst[k_indx])
             cipher += ''.join([row[curr_idx] 
@@ -401,10 +399,10 @@ class ColumnTransposition():
         msg_len = float(len(cipher))
         msg_lst = list(cipher)
     
-        # calculate column of the matrix
+        # calculate number of columns of the grid
         col = len(key)
         
-        # calculate maximum row of the matrix
+        # calculate maximum number of rows of the grid
         row = int(math.ceil(msg_len / col))
     
         # convert key into list and sort 
@@ -412,8 +410,7 @@ class ColumnTransposition():
         # each character by its alphabetical position.
         key_lst = sorted(list(key))
     
-        # create an empty matrix to 
-        # store deciphered message
+        # create an empty matrix to store plaintext message
         dec_cipher = []
         for _ in range(row):
             dec_cipher += [[None] * col]
